@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ data.name }} - Portfolio</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Poppins and Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #212529; /* Dark Grey Text */
+            background-color: #F8F9FA; /* Light Grey Background */
+            padding-top: 70px; /* For fixed navbar */
+        }
+        h1, h2, h3, h4, h5, h6, .navbar-brand, .nav-link {
+            font-family: 'Poppins', sans-serif;
+        }
+        .navbar-custom {
+            background-color: #007BFF; /* Primary Blue */
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: white;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #e0e0e0;
+        }
+        .hero-section {
+            background-color: #007BFF; /* Primary Blue */
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .hero-section img.profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            margin-bottom: 20px;
+        }
+        .section {
+            padding: 60px 0;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 600;
+            color: #007BFF; /* Primary Blue */
+        }
+        .card {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card-header-custom {
+            background-color: #6C757D; /* Secondary Grey */
+            color: white;
+            font-weight: 600;
+        }
+        .contact-icons a {
+            font-size: 1.8rem;
+            margin: 0 10px;
+            color: #007BFF; /* Primary Blue */
+            transition: color 0.3s ease;
+        }
+        .contact-icons a:hover {
+            color: #0056b3; /* Darker Blue */
+        }
+        .skills-list span.badge {
+            font-size: 0.9rem;
+            margin: 5px;
+            background-color: #28A745 !important; /* Accent Green */
+            font-weight: 500;
+        }
+        .project-card a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .project-card a:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            background-color: #343a40; /* Dark background */
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+            padding-left: 30px; /* Space for the icon */
+            border-left: 2px solid #007BFF; /* Primary Blue */
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -9px; /* Adjust to center on the line */
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #007BFF; /* Primary Blue */
+            border: 2px solid white;
+        }
+        .timeline-item h5 {
+            font-weight: 600;
+            color: #212529;
+        }
+        .timeline-item p.company-date {
+            font-size: 0.9rem;
+            color: #6C757D; /* Secondary Grey */
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">{{ data.name or 'Portfolio' }}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    {% if data.experience %}<li class="nav-item"><a class="nav-link" href="#experience">Experience</a></li>{% endif %}
+                    {% if data.education %}<li class="nav-item"><a class="nav-link" href="#education">Education</a></li>{% endif %}
+                    {% if data.skills %}<li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>{% endif %}
+                    {% if data.projects %}<li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>{% endif %}
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="about" class="hero-section">
+        <div class="container">
+            <img src="{{ data.profile_image_url or 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80' }}" alt="Profile Picture" class="profile-pic">
+            <h1>{{ data.name or 'Your Name' }}</h1>
+            <p class="lead">{{ data.title or 'Professional Title' }}</p>
+            <p>{{ data.summary or 'A brief professional summary about yourself will appear here. This can be extracted from your resume.' }}</p>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    {% if data.experience %}
+    <section id="experience" class="section bg-light">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            {% for job in data.experience %}
+            <div class="timeline-item mb-4">
+                <h5>{{ job.title or 'Job Title' }}</h5>
+                <p class="company-date">
+                    <strong>{{ job.company or 'Company Name' }}</strong> 
+                    {% if job.dates %} | {{ job.dates }} {% endif %}
+                </p>
+                <p>{{ job.description | replace('\n', '<br>') | safe or 'Details about responsibilities and achievements.' }}</p>
+            </div>
+            {% else %}
+            <p class="text-center">Details about professional experience will be listed here.</p>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Education Section -->
+    {% if data.education %}
+    <section id="education" class="section">
+        <div class="container">
+            <h2 class="section-title">Education</h2>
+            {% for edu in data.education %}
+            <div class="timeline-item mb-4">
+                <h5>{{ edu.degree or 'Degree / Qualification' }}</h5>
+                <p class="company-date">
+                    <strong>{{ edu.institution or 'Institution Name' }}</strong>
+                    {% if edu.dates %} | {{ edu.dates }} {% endif %}
+                </p>
+                <p>{{ edu.details | replace('\n', '<br>') | safe or 'Details about the course of study, honors, etc.' }}</p>
+            </div>
+            {% else %}
+            <p class="text-center">Information about academic qualifications will be listed here.</p>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Skills Section -->
+    {% if data.skills %}
+    <section id="skills" class="section bg-light">
+        <div class="container">
+            <h2 class="section-title">Skills</h2>
+            <div class="text-center skills-list">
+                {% for skill in data.skills %}
+                <span class="badge rounded-pill">{{ skill }}</span>
+                {% else %}
+                <p>Key skills and proficiencies will be displayed here.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Projects Section -->
+    {% if data.projects %}
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="row">
+                {% for project in data.projects %}
+                <div class="col-md-6 col-lg-4 mb-4 d-flex align-items-stretch">
+                    <div class="card project-card w-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.name or 'Project Title' }}</h5>
+                            <p class="card-text">{{ project.description or 'A brief description of the project.' }}</p>
+                            {% if project.technologies %}
+                            <p class="card-text"><small class="text-muted"><strong>Technologies:</strong> {{ project.technologies | join(', ') }}</small></p>
+                            {% endif %}
+                            {% if project.link and project.link != '#' %}
+                            <a href="{{ project.link if project.link.startswith('http') else 'http://' + project.link }}" target="_blank" class="btn btn-sm btn-outline-primary">View Project</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-center">Details about personal or professional projects will be showcased here.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Contact Section -->
+    <section id="contact" class="section bg-light">
+        <div class="container text-center">
+            <h2 class="section-title">Get In Touch</h2>
+            <p>Feel free to reach out via email or connect with me on social media.</p>
+            <div class="contact-icons my-4">
+                {% if data.email and data.email != 'your.email@example.com' %}
+                    <a href="mailto:{{ data.email }}" title="Email"><i class="fas fa-envelope"></i></a>
+                {% endif %}
+                {% if data.phone and data.phone != '+1234567890' %}
+                    <a href="tel:{{ data.phone }}" title="Phone"><i class="fas fa-phone"></i></a>
+                {% endif %}
+                {% if data.linkedin and data.linkedin != 'your-linkedin-profile' %}
+                    <a href="https://{{ data.linkedin if data.linkedin.startswith('linkedin.com') else 'linkedin.com/in/' + data.linkedin }}" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                {% endif %}
+                {% if data.github and data.github != 'your-github-profile' %}
+                    <a href="https://{{ data.github if data.github.startswith('github.com') else 'github.com/' + data.github }}" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                {% endif %}
+                {% if data.website and data.website != 'yourpersonal.website' %}
+                    <a href="{{ data.website if data.website.startswith('http') else 'http://' + data.website }}" target="_blank" title="Website"><i class="fas fa-globe"></i></a>
+                {% endif %}
+            </div>
+            {% if data.email and data.email != 'your.email@example.com' %}
+            <p><strong>Email:</strong> <a href="mailto:{{ data.email }}">{{ data.email }}</a></p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ "now" | date("%Y") }} {{ data.name or 'Your Name' }}. All rights reserved.</p>
+            <p>Portfolio generated by ResumeSpark ✨</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

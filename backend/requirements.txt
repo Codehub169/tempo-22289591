@@ -1,0 +1,6 @@
+Flask>=2.0.0
+python-docx>=0.8.11
+pdfminer.six>=20220506
+spacy>=3.0.0
+Flask-CORS>=3.0.10
+gunicorn>=20.1.0
