@@ -8,7 +8,7 @@ import logging
 from core.resume_parser import parse_resume
 from core.portfolio_generator import generate_portfolio_html
 
-app = Flask(__name__, static_folder='../../frontend/build', static_url_path='/')
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='/')
 CORS(app) # Enable CORS for all routes
 
 # Configure logging
@@ -26,6 +26,9 @@ UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Ensure the upload folder exists
+# This path will be relative to where app.py is executed from.
+# startup.sh executes `python backend/app.py` from the project root.
+# Thus, 'uploads' will be created in the project root.
 if not os.path.exists(UPLOAD_FOLDER):
     try:
         os.makedirs(UPLOAD_FOLDER)
@@ -74,7 +77,8 @@ def upload_resume_route():
             parsed_data = parse_resume(file_path)
             if parsed_data.get("error"):
                 app.logger.error(f"Error parsing resume {filename}: {parsed_data['error']}")
-                return jsonify({'error': f'Error processing file: {parsed_data["error"]}"}), 500
+                # Fixed syntax error in the f-string below (removed trailing quote)
+                return jsonify({'error': f'Error processing file: {parsed_data["error"]}'}), 500
 
             portfolio_html = generate_portfolio_html(parsed_data)
             if "Error: Could not generate portfolio" in portfolio_html: # Check for known error string from generator
@@ -111,17 +115,23 @@ def upload_resume_route():
 def serve_react_app(path):
     """Serves the main index.html for the React app and its static assets."""
     if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        # If the path points to an existing file in the static folder, serve it.
         return send_from_directory(app.static_folder, path)
     elif path == "favicon.ico": 
+        # Explicitly handle favicon.ico if not caught by the above (e.g., if it's at the root)
         favicon_path = os.path.join(app.static_folder, 'favicon.ico')
         if os.path.exists(favicon_path):
             return send_from_directory(app.static_folder, 'favicon.ico')
         else:
-            # Silently ignore or return a default favicon if preferred over 404
             app.logger.debug("Favicon.ico not found in static folder.")
             abort(404) 
     else:
         # Serve index.html for any route not matching a static file (client-side routing)
+        # Also serves index.html for the root path '/' when path is ''.
+        index_html_path = os.path.join(app.static_folder, 'index.html')
+        if not os.path.exists(index_html_path):
+            app.logger.error(f"index.html not found in static folder: {app.static_folder}")
+            abort(404) # Or provide a more user-friendly error page
         return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
